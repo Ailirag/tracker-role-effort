@@ -1,6 +1,13 @@
 import { trackerApi } from '@weavix/tracker-plugin-sdk';
 
-import type { TrackerField, TrackerIssue, TrackerQueue, Worklog } from './types';
+import type {
+    QueuePermissionHolders,
+    TrackerField,
+    TrackerIssue,
+    TrackerMyself,
+    TrackerQueue,
+    Worklog,
+} from './types';
 
 /**
  * Все обращения к API Трекера собраны здесь.
@@ -88,6 +95,26 @@ export const fetchQueues = async (): Promise<TrackerQueue[]> => {
 
     return queues;
 };
+
+/** Текущий пользователь — по нему проверяются права на очередь. */
+export const fetchMyself = (): Promise<TrackerMyself> => get<TrackerMyself>('/myself', {});
+
+/**
+ * Держатели права `GRANT` — администрирования очереди — среди указанных
+ * пользователей.
+ *
+ * Право выдаётся не только напрямую, но и через группу или роль, поэтому
+ * вопрос задаётся API про конкретного человека (`users`), а не разбирается
+ * на клиенте по спискам держателей: членство в группах отсюда не видно.
+ */
+export const fetchQueueGrantHolders = (
+    queueKey: string,
+    user: string,
+): Promise<QueuePermissionHolders> =>
+    get<QueuePermissionHolders>('/queues/{id}/checkPermissions/{type}', {
+        pathParams: { id: queueKey, type: 'GRANT' },
+        queryParams: { users: [user] },
+    });
 
 /** Поиск задач по языку запросов Трекера. */
 export const searchIssues = (

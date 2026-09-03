@@ -52,12 +52,33 @@ export interface TrackerQueue {
     name?: string;
 }
 
-/** Пользователь в полях задачи и в ворклогах. */
+/** Пользователь в полях задачи, в ворклогах и в списках прав. */
 export interface TrackerUser {
     id?: string | number;
     display?: string;
-    passportUid?: number;
-    cloudUid?: string;
+    key?: string | null;
+    passportUid?: number | null;
+    cloudUid?: string | null;
+}
+
+/**
+ * Текущий пользователь. Идентификаторы приходят под другими именами, чем
+ * в полях задачи (`uid`/`trackerUid` вместо `id`), поэтому сопоставлять
+ * его с любым списком пользователей приходится по набору значений.
+ */
+export interface TrackerMyself {
+    uid?: number;
+    trackerUid?: number;
+    login?: string;
+    passportUid?: number | null;
+    cloudUid?: string | null;
+}
+
+/** Держатели одного права на очередь: напрямую, через группу или через роль. */
+export interface QueuePermissionHolders {
+    users?: TrackerUser[];
+    groups?: unknown[];
+    roles?: unknown[];
 }
 
 /** Ворклог задачи. */

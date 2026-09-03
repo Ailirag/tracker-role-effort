@@ -20,6 +20,7 @@ import { computeEffort } from '../../core/effort';
 import { loadSettings } from '../../core/settingsRepository';
 import { fetchQueueFields, fetchQueues } from '../../core/trackerClient';
 import type { QueueSettings, TrackerField, TrackerQueue } from '../../core/types';
+import { useQueueAdmin } from '../../core/useQueueAdmin';
 import { useQueueSettings } from '../../core/useQueueSettings';
 import { RoleEffortTable } from '../../ui/RoleEffortTable';
 import { SettingsForm } from '../../ui/SettingsForm';
@@ -44,6 +45,14 @@ const App = () => {
     const [queues, setQueues] = useState<TrackerQueue[]>([]);
 
     const settingsState = useQueueSettings(queueKey);
+    const admin = useQueueAdmin(queueKey);
+
+    /**
+     * Пока право не подтверждено, вкладки «Настройки» нет, поэтому активной
+     * может остаться только сводка — иначе после проверки экран оказался бы
+     * на вкладке, которой больше не существует.
+     */
+    const activeTab = admin.isAdmin ? tab : 'summary';
 
     useEffect(() => {
         if (queueKey) {
@@ -86,16 +95,30 @@ const App = () => {
         <ThemeProvider theme={theme}>
             <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <TabProvider
-                    value={tab}
+                    value={activeTab}
                     onUpdate={(value: string) => setTab(value as 'summary' | 'settings')}
                 >
                     <TabList>
                         <Tab value="summary">Сводка</Tab>
-                        <Tab value="settings">Настройки</Tab>
+                        {/* Настройки — только для тех, кто администрирует очередь. */}
+                        {admin.isAdmin && <Tab value="settings">Настройки</Tab>}
                     </TabList>
                 </TabProvider>
 
-                {settingsState.loading && <Spin size="m" />}
+                {(settingsState.loading || admin.loading) && <Spin size="m" />}
+
+                {/*
+                    Проверка прав не выполнилась — это не отказ в доступе, а сбой.
+                    Вкладку настроек в таком случае не показываем, но причину
+                    называем: иначе её пропажа выглядела бы как поломка плагина.
+                */}
+                {!admin.loading && admin.error && (
+                    <Alert
+                        theme="warning"
+                        title="Не удалось проверить права на очередь"
+                        message={`${admin.error}. Вкладка «Настройки» скрыта.`}
+                    />
+                )}
 
                 {/*
                     Настройки не прочитались — без них вкладка «Настройки» пуста,
@@ -113,7 +136,7 @@ const App = () => {
                     />
                 )}
 
-                {!settingsState.loading && tab === 'summary' && (
+                {!settingsState.loading && !admin.loading && activeTab === 'summary' && (
                     <Card style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
                         {settingsState.snapshot?.isDefault && (
                             <Alert
@@ -168,7 +191,7 @@ const App = () => {
                     </Card>
                 )}
 
-                {!settingsState.loading && tab === 'settings' && settings && (
+                {!settingsState.loading && !admin.loading && admin.isAdmin && activeTab === 'settings' && settings && (
                     <Card style={{ padding: 16 }}>
                         <SettingsForm
                             settings={settings}
@@ -176,7 +199,11 @@ const App = () => {
                             queueKey={queueKey}
                             queues={queues}
                             onCopyFrom={copyFrom}
-                            canWrite={settingsState.snapshot?.canWrite ?? false}
+                            // Право на очередь — обязательное условие: хранилище
+                            // плагина о нём не знает и само бы пропустило.
+                            canWrite={
+                                admin.isAdmin && (settingsState.snapshot?.canWrite ?? false)
+                            }
                             saving={settingsState.saving}
                             error={settingsState.error}
                             onSave={settingsState.save}
