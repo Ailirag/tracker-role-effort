@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Трудозатраты по ролям">
+    <rect width="256" height="256" rx="56" fill="#1B2A4A" />
+
+    <!-- Три роли: светлая часть — план, насыщенная — факт -->
+    <g>
+        <rect x="44" y="66" width="168" height="20" rx="10" fill="#33456B" />
+        <rect x="44" y="66" width="120" height="20" rx="10" fill="#4E8FF7" />
+    </g>
+    <g>
+        <rect x="44" y="118" width="168" height="20" rx="10" fill="#33456B" />
+        <rect x="44" y="118" width="168" height="20" rx="10" fill="#6FCF97" />
+    </g>
+    <g>
+        <rect x="44" y="170" width="168" height="20" rx="10" fill="#33456B" />
+        <rect x="44" y="170" width="76" height="20" rx="10" fill="#F2C94C" />
+    </g>
+</svg>

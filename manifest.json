@@ -1,0 +1,58 @@
+{
+    "slug": "role-effort",
+    "version": "0.1.0",
+    "manifest_version": 1,
+    "supported_services": ["tracker"],
+    "name": {
+        "ru": "Трудозатраты по ролям",
+        "en": "Effort by role"
+    },
+    "description": {
+        "ru": "Показывает план и факт трудозатрат в разрезе ролей",
+        "en": "Shows planned and actual effort by role"
+    },
+    "support": [
+        {
+            "type": "email",
+            "value": "garipov_ir@grandtrade.world"
+        }
+    ],
+    "categories": ["Аналитика и отчёты"],
+    "keywords": ["трудозатраты", "роли", "оценка", "план-факт", "worklog"],
+    "whatsnew": "Первая версия: план-факт по ролям на карточке задачи и в очереди, настройка соответствия полей.",
+    "permissions": {
+        "data": [
+            "tracker:issues:read",
+            "tracker:queues:read",
+            "tracker:fields:read",
+            "tracker:localFields:read",
+            "tracker:worklog:read",
+            "tracker:users:read",
+            "tracker:myself:read"
+        ]
+    },
+    "slots": {
+        "tracker": {
+            "issue.block": [
+                {
+                    "entrypoint": "issue-block.html",
+                    "contextLevel": "basic",
+                    "title": {
+                        "ru": "Трудозатраты по ролям",
+                        "en": "Effort by role"
+                    }
+                }
+            ],
+            "queue.tab": [
+                {
+                    "entrypoint": "queue-tab.html",
+                    "contextLevel": "basic",
+                    "title": {
+                        "ru": "Трудозатраты по ролям",
+                        "en": "Effort by role"
+                    }
+                }
+            ]
+        }
+    }
+}

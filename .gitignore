@@ -1,0 +1,11 @@
+node_modules/
+dist/
+
+# Генерируются `weavix debug` под локальный дебаг-сервер: содержат
+# localhost-адреса и pid текущего запуска, в репозитории им делать нечего.
+config.json
+.yaweavix-debug.lock
+
+.DS_Store
+Thumbs.db
+*.local
