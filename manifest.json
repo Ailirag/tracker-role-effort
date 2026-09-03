@@ -2,7 +2,9 @@
     "slug": "role-effort",
     "version": "0.1.0",
     "manifest_version": 1,
-    "supported_services": ["tracker"],
+    "supported_services": [
+        "tracker"
+    ],
     "name": {
         "ru": "Трудозатраты по ролям",
         "en": "Effort by role"
@@ -17,8 +19,16 @@
             "value": "garipov_ir@grandtrade.world"
         }
     ],
-    "categories": ["Аналитика и отчёты"],
-    "keywords": ["трудозатраты", "роли", "оценка", "план-факт", "worklog"],
+    "categories": [
+        "Аналитика и отчёты"
+    ],
+    "keywords": [
+        "трудозатраты",
+        "роли",
+        "оценка",
+        "план-факт",
+        "worklog"
+    ],
     "whatsnew": "Первая версия: план-факт по ролям на карточке задачи и в очереди, настройка соответствия полей.",
     "permissions": {
         "data": [
@@ -54,5 +64,6 @@
                 }
             ]
         }
-    }
+    },
+    "id": "54d69df4-00d0-405a-a470-ff5afab463db"
 }
